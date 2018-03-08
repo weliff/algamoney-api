@@ -56,14 +56,9 @@ public class LancamentoResource {
 	}
 
 	@DeleteMapping("/{codigo}")
-	public ResponseEntity<Void> excluirPeloCodigo(@PathVariable Long codigo) {
-		Lancamento lancamento = lancamentoRepository.findOne(codigo);
-		if (lancamento != null) {
-			lancamentoRepository.delete(lancamento);
-			return ResponseEntity.noContent().build();
-		} else {
-			return ResponseEntity.notFound().build();
-		}
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void excluirPeloCodigo(@PathVariable Long codigo) {
+		lancamentoRepository.delete(codigo);
 	}
 	
 	@PostMapping
