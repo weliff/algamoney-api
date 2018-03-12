@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -40,6 +41,8 @@ public class PessoaResource {
 		return pessoa != null ? ResponseEntity.ok(pessoa) : ResponseEntity.notFound().build();
 	}
 
+
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA')")// and #oauth2.hasScope('read')")
 	@GetMapping
 	public List<Pessoa> listarTodas() {
 		return pessoaRepository.findAll();

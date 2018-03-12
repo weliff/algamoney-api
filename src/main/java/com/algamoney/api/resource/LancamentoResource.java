@@ -1,13 +1,13 @@
 package com.algamoney.api.resource;
 
 import com.algamoney.api.event.RecursoCriadoEvent;
-import com.algamoney.api.repository.projection.ResumoLancamento;
-import com.algamoney.api.service.exception.PessoaInexistenteOuInativoException;
 import com.algamoney.api.exceptionhandler.AlgamoneyExceptionHandler;
 import com.algamoney.api.model.Lancamento;
 import com.algamoney.api.repository.LancamentoRepository;
 import com.algamoney.api.repository.filter.LancamentoFilter;
+import com.algamoney.api.repository.projection.ResumoLancamento;
 import com.algamoney.api.service.LancamentoService;
+import com.algamoney.api.service.exception.PessoaInexistenteOuInativoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -38,12 +39,14 @@ public class LancamentoResource {
 
 	@Autowired
 	private MessageSource messageSource;
-	
+
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")// and #oauth2.hasScope('read')")
 	@GetMapping
 	public Page<Lancamento> pesquisar(LancamentoFilter lancamentoFilter, Pageable pageable) {
 		return lancamentoRepository.filtrar(lancamentoFilter, pageable);
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")// and #oauth2.hasScope('read')")
 	@GetMapping(params = "resumo")
 	public Page<ResumoLancamento> resumir(LancamentoFilter lancamentoFilter, Pageable pageable) {
 		return lancamentoRepository.resumir(lancamentoFilter, pageable);
